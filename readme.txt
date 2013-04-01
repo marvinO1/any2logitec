@@ -1,1 +1,1 @@
-The "Jekings to Gamepad" project for NCA Code Camp 2013
+The "Jekings to Gamepad" project for NCA Code Camp 2013.
