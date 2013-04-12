@@ -30,7 +30,7 @@ public class JenkinsAdapter {
 		Document dom = new SAXReader().read(url);
 		
 		logger.info("Fetching job states from jenkins ..."); 
-		for( Element job : (List<Element>)dom.getRootElement().elements("job")) {
+		for( Element job : (List<Element>) dom.getRootElement().elements("job")) {
 			String jobName = job.elementText("name");
 			if (colorToTrigger.name().equalsIgnoreCase(job.elementText("color"))) {
 	

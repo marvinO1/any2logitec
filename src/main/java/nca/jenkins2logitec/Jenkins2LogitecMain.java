@@ -40,7 +40,7 @@ public class Jenkins2LogitecMain {
 		    } catch (Exception e) {			
 			  e.printStackTrace();
 		    }
-            pause(60);          
+            pause(10);          
           }
 
         } else {

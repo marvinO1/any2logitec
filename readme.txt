@@ -29,6 +29,9 @@ Approach
    - text file will be written with jenkins.50.message
    - we wait for 60 seconds before we do the next check
    
+  
+
+
 Outlook
 -------   
  - Consumer reads files in FIFO manner and will also dispaly a message as 
