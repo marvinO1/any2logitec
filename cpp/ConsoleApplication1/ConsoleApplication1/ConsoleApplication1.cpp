@@ -1,4 +1,4 @@
-// ConsoleApplication1.cpp : Definiert den Einstiegspunkt fÃ¼r die Konsolenanwendung.
+// ConsoleApplication1.cpp : Definiert den Einstiegspunkt für die Konsolenanwendung.
 
 #pragma comment(lib, "LogitechLcd.lib")
 

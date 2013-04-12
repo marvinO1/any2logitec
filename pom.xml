@@ -14,10 +14,13 @@
     <slf4jVersion>1.6.1</slf4jVersion>
     
     <junit.version>4.11</junit.version>
+    <mockito.version>1.8.4</mockito.version>
   </properties>
   
  
   <dependencies>
+  
+  
   
     <dependency>
 	  <groupId>dom4j</groupId>
@@ -44,6 +47,12 @@
       <scope>test</scope>
     </dependency>
     
+    <dependency>
+	  <groupId>org.mockito</groupId>
+	  <artifactId>mockito-all</artifactId>
+	  <version>${mockito.version}</version>
+	  <scope>test</scope>
+     </dependency>
     
   </dependencies>  
   

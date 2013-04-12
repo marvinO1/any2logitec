@@ -8,8 +8,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nca.any2logitec.common.Any2Logitec;
-import nca.any2logitec.common.MessageWriter;
+import nca.any2logitec.api.Any2LogitecEnvironment;
+import nca.any2logitec.api.MessageWriter;
 
 /**
  * Main class for reading information from jenkins regarding the build state off all jobs.
@@ -25,7 +25,7 @@ public class Jenkins2LogitecMain {
           String jenkisRestUrl = args[0];
           logger.info("Using jenkins REST API at: {}", jenkisRestUrl); 
           
-          Path rootPath = Any2Logitec.getLogitecDisplayFolderRoot();
+          Path rootPath = Any2LogitecEnvironment.getLogitecHubInboundFolder();
           logger.info("Using root path: {}", rootPath.toAbsolutePath()); 
           
           while (true) {
@@ -34,7 +34,7 @@ public class Jenkins2LogitecMain {
 			 JenkinsAdapter adapter = new JenkinsAdapter(url, JobStatusColor.RED);
 			 List<String> projectsInTroubleList = adapter.getProjectsInTrouble();
 			
-			 Path pathToWrite = rootPath.resolve("jenkins.5.message");
+			 Path pathToWrite = rootPath.resolve("jenkins.00.message");
 			 MessageWriter.writeMessages(pathToWrite, projectsInTroubleList);
 			
 		    } catch (Exception e) {			
