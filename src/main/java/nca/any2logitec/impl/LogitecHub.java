@@ -2,7 +2,9 @@ package nca.any2logitec.impl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Timer;
 
+import nca.any2logitec.api.Adapter;
 import nca.any2logitec.api.Any2LogitecEnvironment;
 import nca.any2logitec.api.CommandKey;
 import nca.any2logitec.api.MessageConsumer;
@@ -10,6 +12,9 @@ import nca.any2logitec.api.MessageProducer;
 import nca.jenkins2logitec.JenkinsAdapter;
 import nca.jenkins2logitec.JenkinsCommand;
 import nca.jenkins2logitec.JobStatusColor;
+import nca.tagi.TagiAdapter;
+import nca.tagi.TagiCommand;
+import nca.tagi.newsticker.FeedReader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +29,11 @@ public class LogitecHub {
 	public static void main(String[] args) throws Exception {
 
 		try {
-			jenkins();
+			logger.info("Starting LogitecHub ...");
+			// jenkins();
+			tagi();
+			logger.info("done!");
+			
 		} catch (Exception ex) {
 			logger.error("Failed to initialize components for jenkins ...", ex);
 		}
@@ -40,22 +49,20 @@ public class LogitecHub {
 		logger.info("LogitecHub done!");
 	}
 
-	// -- JENKINS
-	// --------------------------------------------------------------------------------
+	// -- JENKINS --------------------------------------------------------------------------------
 
-	protected static void jenkins() throws MalformedURLException {
-		logger.info("Starting LogitecHub ...");
+	protected static void jenkins() throws MalformedURLException {		
 		logger.info("Install Jenkins Adapter ...");
-		Runnable ja = getJenkinsAdapter();
-		new Thread(ja).start();
+		Timer adapterTimer = new Timer();
+		adapterTimer.schedule(new AdapterTask(getJenkinsAdapter()), 1000L, 10*1000L);
 		logger.info("done!");
 		logger.info("Install Jenkins Command Invoker ...");
 		CommandInvoker commandInvoker = getJenkinsCommandInvoker();
-		commandInvoker.start();
+		commandInvoker.start();		
 		logger.info("done!");
 	}
 
-	protected static Runnable getJenkinsAdapter() throws MalformedURLException {
+	protected static Adapter getJenkinsAdapter() throws MalformedURLException {
 		URL url = new URL("http://localhost:8080/jenkins/api/xml");
 		JenkinsAdapter adapter = new JenkinsAdapter(url, JobStatusColor.RED, getMessageProducer());
 		return adapter;
@@ -70,10 +77,40 @@ public class LogitecHub {
 		return commandInvoker;
 	}
 
+	
+
+	// -- Tagi -----------------------------------------------------------------------------------
+	protected static void tagi() throws MalformedURLException {		
+		logger.info("Install Tagi Adapter ...");
+		Timer adapterTimer = new Timer();
+		adapterTimer.schedule(new AdapterTask(getTagiAdapter()), 2000L, 20*1000L);
+		logger.info("done!");
+		logger.info("Install Tagi Command Invoker ...");
+		CommandInvoker commandInvoker = getTagiCommandInvoker();
+		commandInvoker.start();
+		logger.info("done!");
+	}
+	
+	protected static Adapter getTagiAdapter() throws MalformedURLException {
+		return new TagiAdapter(getTagiFeedReader(), getMessageProducer());
+	}
+	
+	
+	protected static FeedReader getTagiFeedReader() throws MalformedURLException {
+		URL url = new URL("http://www.tagesanzeiger.ch/rss_ticker.html");
+		return new FeedReader(url);
+	}
+	
+	protected static CommandInvoker getTagiCommandInvoker() {
+		MessageConsumer messageConsumer = new FileBasedMessageConsumer(
+				Any2LogitecEnvironment.getLogitecHubOutboundFolder(), "tagi");
+
+		CommandInvoker commandInvoker = new CommandInvoker(messageConsumer);
+		commandInvoker.register(CommandKey.BUTTON_3, new TagiCommand());		
+		return commandInvoker;
+	}
+	// -- Common -----------------------------------------------------------------------------------
 	protected static MessageProducer getMessageProducer() {
 		return new FileBasedMessageProducer(Any2LogitecEnvironment.getLogitecHubInboundFolder());
 	}
-
-	// -- Tagi
-	// -----------------------------------------------------------------------------------
 }

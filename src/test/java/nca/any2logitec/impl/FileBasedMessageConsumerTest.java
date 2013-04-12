@@ -49,7 +49,14 @@ public class FileBasedMessageConsumerTest {
 		assertThat(this.consumer.isCommandExpired(p), equalTo(false));
 	}
 	
+	@Test
 	public void testGetFeedPattern() {
 		assertThat(this.consumer.getFeedPattern(), equalTo("hossa.*.pressed"));
+	}
+	
+	@Test
+	public void testStripCorrelationId() {
+		Path p = Paths.get("hossa.10.12344.message.b3.pressed");
+		assertThat(this.consumer.stripCorrelationId(p), equalTo(12344L));
 	}
 }

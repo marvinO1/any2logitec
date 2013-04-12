@@ -21,10 +21,14 @@ public class FileBasedMessageProducer implements MessageProducer {
 
 	@Override
 	public void produce(List<String> messages, String feedName,
-			int desiredDisplayTimeInSeconds) throws IOException {
+			int desiredDisplayTimeInSeconds, long correlationId) throws IOException {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(feedName).append(".").append(desiredDisplayTimeInSeconds).append(".message");
+		sb.append(feedName).append(".")
+		   .append(desiredDisplayTimeInSeconds)
+		   .append(".")
+		   .append(correlationId)
+		   .append(".message");
 		Files.write(this.inboundPath.resolve(sb.toString()), messages, StandardCharsets.UTF_8);
 	}
 }

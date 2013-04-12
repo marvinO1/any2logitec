@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import nca.any2logitec.api.Adapter;
 import nca.any2logitec.api.MessageProducer;
 
 import org.dom4j.Document;
@@ -13,15 +14,13 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JenkinsAdapter implements Runnable {
+public class JenkinsAdapter implements Adapter  {
 
-	private static Logger logger = LoggerFactory
-			.getLogger(JenkinsAdapter.class);
+	private static Logger logger = LoggerFactory.getLogger(JenkinsAdapter.class);
 	private JobStatusColor colorToTrigger;
 	private URL url;
 	private MessageProducer messageProducer;
-	private boolean run = true;
-
+    private long correlationId = 0;
 	public JenkinsAdapter(URL jenkinsRestUrl, JobStatusColor colorToTrigger,
 			MessageProducer messageProducer) {
 		this.url = jenkinsRestUrl;
@@ -30,18 +29,19 @@ public class JenkinsAdapter implements Runnable {
 	}
 
 	@Override
-	public void run() {
+	public void produceInfo() {
+		
 		try {
-			while (this.run) {
+			
 				List<String> projectsInTroubleList = getProjectsInTrouble();
-				this.messageProducer.produce(projectsInTroubleList, "jenkins", 10);
-				Thread.sleep(10 * 1000);
-			}
+				this.messageProducer.produce(projectsInTroubleList, "jenkins", 10, correlationId++);
+			
 		} catch (Exception ex) {
 			logger.error("Failed to read project state", ex);
 		}
+		
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<String> getProjectsInTrouble() throws DocumentException {
 		List<String> l = new ArrayList<String>();
@@ -62,4 +62,5 @@ public class JenkinsAdapter implements Runnable {
 		}
 		return l;
 	}
+
 }

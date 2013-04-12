@@ -29,7 +29,7 @@ simple protocol and implemented a file based version.
      consumed.
      
 The class nca.any2logitec.impl.LogitectHub is the main class. It contains also
-the "hard coded" confoguration for the jekins and tagi adapters.
+the "hard coded" configuration for the jekins and tagi adapters.
 
 In the folder cpp you find the c++ programm which talks to the game pad through
 the provided API from logitec. See also 

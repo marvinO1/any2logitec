@@ -6,5 +6,5 @@ public interface MessageConsumer {
 	/**
 	 * Reads the messages from the device and creates the command keys.
 	 */
-	List<CommandKey> consume();
+	List<CommandInfo> consume();
 }

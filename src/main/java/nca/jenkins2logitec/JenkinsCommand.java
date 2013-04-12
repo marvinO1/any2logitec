@@ -10,8 +10,8 @@ public class JenkinsCommand implements Command {
 	private static Logger logger = LoggerFactory.getLogger(JenkinsCommand.class);
 
 	@Override
-	public void execute() {
-		logger.info("Jenkins command would now be invoked ...");
+	public void execute(long correlationId) {
+		logger.info("Jenkins command would now be invoked, correlationId: {}", correlationId);
 	}
 
 }

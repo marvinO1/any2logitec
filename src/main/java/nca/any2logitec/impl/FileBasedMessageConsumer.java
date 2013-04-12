@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nca.any2logitec.api.CommandInfo;
 import nca.any2logitec.api.CommandKey;
 import nca.any2logitec.api.MessageConsumer;
 
@@ -33,17 +34,20 @@ public class FileBasedMessageConsumer implements MessageConsumer {
 	}
 
 	@Override
-	public List<CommandKey> consume() {
-		List<CommandKey> messages = new ArrayList<CommandKey>();
+	public List<CommandInfo> consume() {
+		List<CommandInfo> messages = new ArrayList<CommandInfo>();
 
 		String feedPatter = getFeedPattern();
 		try (DirectoryStream<Path> commands = Files.newDirectoryStream(
 				this.outboundPath, feedPatter)) {
 			for (Path p : commands) {
 				CommandKey key = CommandKey.fromFileRepresentation(p, this.feedName);
+				
+				Long id = stripCorrelationId(p); 
+				CommandInfo ci = new CommandInfo(key, id);
 
 				if (!isCommandExpired(p)) {
-					messages.add(key);
+					messages.add(ci);
 				}
 				removeCommandFile(p);
 			}
@@ -52,7 +56,7 @@ public class FileBasedMessageConsumer implements MessageConsumer {
 		}
 		return messages;
 	}
-
+	
 	/**
 	 * Answers true in case the found command was created before the
 	 * {@link CommandInvoker} was started and therefore is expired!
@@ -88,5 +92,14 @@ public class FileBasedMessageConsumer implements MessageConsumer {
 		} catch (IOException ex) {
 			logger.error("Failed to remove command file: " + p.toAbsolutePath(), ex);
 		}
+	}
+	
+	protected long stripCorrelationId(Path path) {
+		logger.info("stripping correlationId from. {}", path.toAbsolutePath());
+		
+		String[] tok = path.toAbsolutePath().toString().split("\\.");
+		
+		
+		return Long.valueOf(tok[tok.length -4]);
 	}
 }

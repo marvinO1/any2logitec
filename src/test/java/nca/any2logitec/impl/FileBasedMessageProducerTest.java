@@ -31,7 +31,7 @@ public class FileBasedMessageProducerTest {
 		List<String> messages = new ArrayList<String>();
 		messages.add("Hello World");
 		
-		this.producer.produce(messages, "hossa", 10);
+		this.producer.produce(messages, "hossa", 10, 11L);
 
 		// I am to lazzy to write the assert, code works ...
 	}

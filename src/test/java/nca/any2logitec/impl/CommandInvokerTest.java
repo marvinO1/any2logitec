@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import nca.any2logitec.api.Command;
+import nca.any2logitec.api.CommandInfo;
 import nca.any2logitec.api.CommandKey;
 import nca.any2logitec.api.MessageConsumer;
 
@@ -35,13 +36,8 @@ public class CommandInvokerTest {
 		Command commandB0 = mock(Command.class);
 		this.invoker.register(CommandKey.BUTTON_0, commandB0);
 		
-		this.invoker.invoke(CommandKey.BUTTON_0);
+		this.invoker.invoke(new CommandInfo(CommandKey.BUTTON_0, 1L));
 		
-		verify(commandB0).execute();
+		verify(commandB0).execute(1L);
 	}
-	
-
-	
-
-
 }

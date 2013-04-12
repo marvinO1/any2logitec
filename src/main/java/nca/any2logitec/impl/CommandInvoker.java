@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import nca.any2logitec.api.Command;
+import nca.any2logitec.api.CommandInfo;
 import nca.any2logitec.api.CommandKey;
 import nca.any2logitec.api.MessageConsumer;
 
@@ -51,9 +52,9 @@ public class CommandInvoker extends TimerTask {
 
 	@Override
 	public void run() {
-		List<CommandKey> commandKeys = this.messageConsumer.consume();
-		for (CommandKey key : commandKeys) {
-			invoke(key);
+		List<CommandInfo> commandInfos = this.messageConsumer.consume();
+		for (CommandInfo info : commandInfos) {
+			invoke(info);
 		}
 	}
 
@@ -66,11 +67,11 @@ public class CommandInvoker extends TimerTask {
 		commands.remove(key);
 	}
 
-	protected void invoke(CommandKey key) {
-		if (commands.containsKey(key)) {
-			commands.get(key).execute();
+	protected void invoke(CommandInfo info) {
+		if (commands.containsKey(info.getKey())) {
+			commands.get(info.getKey()).execute(info.getCorrelationInfo());
 		} else {
-			logger.warn("No command registered for key: {}", key);
+			logger.warn("No command registered for key: {}", info.getKey());
 		}
 	}
 
