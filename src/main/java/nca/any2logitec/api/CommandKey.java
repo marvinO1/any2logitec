@@ -15,9 +15,10 @@ public enum CommandKey {
 		this.fileRepresentation = fileRepresentation;
 	}
 	
-	static public CommandKey fromFileRepresentation(Path path) {
+	static public CommandKey fromFileRepresentation(Path path, String feedName) {
 		for (CommandKey key : values()) {
-			if (path.toString().endsWith(key.fileRepresentation)) {
+			String name = path.toString();
+			if (name.endsWith(key.fileRepresentation) && name.indexOf(feedName + ".") != -1) {
 				return key;
 			}
 		}

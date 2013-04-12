@@ -15,15 +15,19 @@ public class CommandKeyTest {
 
 	@Test
 	public void testFromFoleRepresentation() {		
-		Path p = Paths.get("hossa/bla/b1.pressed");
-		CommandKey key = CommandKey.fromFileRepresentation(p);		
+		Path p = Paths.get("hossa/bla/hossa.00.b1.pressed");
+		CommandKey key = CommandKey.fromFileRepresentation(p, "hossa");		
 		assertThat(key, equalTo(CommandKey.BUTTON_1));
 	}
 	
 	@Test
 	public void testFromFoleRepresentationNoMatch() {		
-		Path p = Paths.get("hossa/bla/b1.pre");
-		CommandKey key = CommandKey.fromFileRepresentation(p);		
+		Path p = Paths.get("hossa/bla/hossa.00.b1.pressed");
+		CommandKey key = CommandKey.fromFileRepresentation(p, "berta");		
+		assertThat(key, equalTo(null));
+		
+		p = Paths.get("hossa/bla/hossa.00.b1.pres");
+		key = CommandKey.fromFileRepresentation(p, "hossa");		
 		assertThat(key, equalTo(null));
 	}
 }
