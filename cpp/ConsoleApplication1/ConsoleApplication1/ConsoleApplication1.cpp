@@ -1,4 +1,4 @@
-// ConsoleApplication1.cpp : Definiert den Einstiegspunkt für die Konsolenanwendung.
+// ConsoleApplication1.cpp : Definiert den Einstiegspunkt fÃ¼r die Konsolenanwendung.
 
 #pragma comment(lib, "LogitechLcd.lib")
 
@@ -11,6 +11,8 @@
 #define LOGITEC_DISPLAY_FOLDER_ROOT_DEFAULT "C:/temp/logitec"
 
 using namespace std;
+
+static char _lastFeedName[256];
 
 char* getRootPath() {
 	char* pPath;
@@ -86,6 +88,7 @@ long handleFiles() {
 		
 	} else {		
 		printf ("Found file: %s\n", c_file.name);
+		strcpy_s(_lastFeedName, c_file.name);
 		// wait a short time to be sure the file has been written
 		Sleep(100);
 		displayFileContent(c_file);
@@ -113,25 +116,42 @@ void waitBeforeDisplayNextFile(int seconds) {
 void checkButtonsBeforeDisplayNextFile(int seconds) {
 
 	boolean checkButtons = true;
-
+	
 	int i = 0;
 	while (checkButtons) {
 	  LogiLcdUpdate();
 	  if (LogiLcdIsButtonPressed(LOGI_LCD_MONO_BUTTON_0)) {
 		 printf("Button 0 pressed ...\n");
-		 writeOutbound("outbound/b0.pressed");
+		 string fileName = "";
+	     fileName.append("outbound/");
+	     fileName.append(_lastFeedName);
+		 fileName.append(".b0.pressed");
+		 writeOutbound(&fileName.at(0));
 	  }
 	  if (LogiLcdIsButtonPressed(LOGI_LCD_MONO_BUTTON_1)) {
 		printf("Button 1 pressed ...\n");
-		writeOutbound("outbound/b1.pressed");
+		string fileName = "";
+	    fileName.append("outbound/");
+	    fileName.append(_lastFeedName);
+		fileName.append(".b1.pressed");
+		writeOutbound(&fileName.at(0));
 	  }
 	  if (LogiLcdIsButtonPressed(LOGI_LCD_MONO_BUTTON_2)) {
+
 		printf("Button 2 pressed ...\n");
-		writeOutbound("outbound/b2.pressed");
+		string fileName = "";
+	    fileName.append("outbound/");
+	    fileName.append(_lastFeedName);
+		fileName.append(".b2.pressed");
+		writeOutbound(&fileName.at(0));
 	  }
 	  if (LogiLcdIsButtonPressed(LOGI_LCD_MONO_BUTTON_3)) {
 		printf("Button 3 pressed ...\n");
-		writeOutbound("outbound/b3.pressed");
+		string fileName = "";
+	    fileName.append("outbound/");
+	    fileName.append(_lastFeedName);
+		fileName.append(".b3.pressed");
+		writeOutbound(&fileName.at(0));
 	  }
 
 	  // if not reached the max time to wait, we stay in the loop.
@@ -147,13 +167,15 @@ void checkButtonsBeforeDisplayNextFile(int seconds) {
 
 int _tmain(int argc, _TCHAR* argv[]) {
 
+
+
 	wchar_t * text = L"NCA-LogitecHub";
 	LogiLcdInit(text, LOGI_LCD_TYPE_MONO);
 
 	printf("Running ConsoleApplication1 ...\n");
 	char* pPath = getRootPath();
 	if (pPath != NULL) {
-	  printf ("Current path to look up files is: %s\n", pPath);
+	  printf ("V1.0.0, Current path to look up files is: %s\n", pPath);
 
 	   _chdir(pPath);
 	   while(true) {
