@@ -1,10 +1,11 @@
-// ConsoleApplication1.cpp : Definiert den Einstiegspunkt für die Konsolenanwendung.
-//
+// ConsoleApplication1.cpp : Definiert den Einstiegspunkt fÃ¼r die Konsolenanwendung.
 
 #pragma comment(lib, "LogitechLcd.lib")
 
 #include "stdafx.h"
 #include "LogitechLcd.h"
+#include <iostream>
+#include <fstream>
 
 #define LOGITEC_DISPLAY_FOLDER_ROOT "LOGITEC_DISPLAY_FOLDER_ROOT"
 #define LOGITEC_DISPLAY_FOLDER_ROOT_DEFAULT "C:/temp/logitec"
@@ -23,17 +24,17 @@ char* getRootPath() {
 }
 
 void removeFile(_finddata_t c_file) {
-	printf ("Removing file: %s\n", c_file.name);
+	// printf ("Removing file: %s\n", c_file.name);
 	remove(c_file.name);
 
 }
 
 
 void sendContentToLogitec(char* line0, char* line1, char* line2, char* line3) {
-	printf("Zeile[0]: %s \n", line0);
-	printf("Zeile[1]: %s \n", line1);
-	printf("Zeile[2]: %s \n", line2);
-	printf("Zeile[3]: %s \n", line3);
+	// printf("Zeile[0]: %s \n", line0);
+	// printf("Zeile[1]: %s \n", line1);
+	// printf("Zeile[2]: %s \n", line2);
+	// printf("Zeile[3]: %s \n", line3);
 
 	wchar_t  ws[100];
 	swprintf(ws, 100, L"%hs", line0);
@@ -78,9 +79,10 @@ long handleFiles() {
 	long hFile;
 	struct _finddata_t c_file;
 
+	_chdir("inbound");
 	 // Would be nice to read the oldest file first, so we would have some kind of FIFO queue!
 	if ((hFile = _findfirst("*.message", &c_file)) == -1L) {
-		printf ("No Files found!\n");
+		// printf ("No Files found!\n");
 		
 	} else {		
 		printf ("Found file: %s\n", c_file.name);
@@ -90,12 +92,19 @@ long handleFiles() {
 		removeFile(c_file);		
 	}
 	_findclose(hFile);
+	_chdir("..");
 
 	// we could read the dispaly time from the file name, by now we just display a message 
 	// at least 5 seconds. This is ok for the first approach!
 	return 5;
 }
 
+void writeOutbound(char* button) {
+  ofstream myfile;
+  myfile.open (button);
+  myfile << "pressed";
+  myfile.close();
+}
 
 void waitBeforeDisplayNextFile(int seconds) {
   Sleep(seconds *  1000);
@@ -110,15 +119,19 @@ void checkButtonsBeforeDisplayNextFile(int seconds) {
 	  LogiLcdUpdate();
 	  if (LogiLcdIsButtonPressed(LOGI_LCD_MONO_BUTTON_0)) {
 		 printf("Button 0 pressed ...\n");
+		 writeOutbound("outbound/b0.pressed");
 	  }
 	  if (LogiLcdIsButtonPressed(LOGI_LCD_MONO_BUTTON_1)) {
 		printf("Button 1 pressed ...\n");
+		writeOutbound("outbound/b1.pressed");
 	  }
 	  if (LogiLcdIsButtonPressed(LOGI_LCD_MONO_BUTTON_2)) {
 		printf("Button 2 pressed ...\n");
+		writeOutbound("outbound/b2.pressed");
 	  }
 	  if (LogiLcdIsButtonPressed(LOGI_LCD_MONO_BUTTON_3)) {
 		printf("Button 3 pressed ...\n");
+		writeOutbound("outbound/b3.pressed");
 	  }
 
 	  // if not reached the max time to wait, we stay in the loop.
@@ -126,7 +139,7 @@ void checkButtonsBeforeDisplayNextFile(int seconds) {
 		  Sleep(100);
 		  i++;
 	  } else {
-		  printf("leaving loop to chec buttons!");
+		  // printf("leaving loop to chec buttons!");
 		  checkButtons = false;
 	  }
 	}
