@@ -4,43 +4,36 @@ display any 4 line information on the pad. Jekins would only be one source.
 The whole thing should be language independent. So any device that can produce 
 a 4 line file can act as a message producer.
 
-Approach
---------
- - We have a text file consumer which will read text files from the directory 
-   defined with the system environment LOGITEC_DISPLAY_FOLDER_ROOT. 
-   The consumer is written in C++ to be able to talk to the Logitec game pad.
+We implemented a little messaging application which can send information to 
+the display as well as triggers pressed buttons. Doing this we defined a 
+simple protocol and implemented a file based version.
+
+   ${windowsUser}/.logitec/inbound is the folder where we can place messages 
+   which then get displayed by the pad. Each message producer uses its unique 
+   feed name to produce files:
    
-   - code is not yet in GIT
-   - the first 4 lines of such a text file will be send to the logitec game pad
-   - after sending the lines, the file will be removed by the consumer
-   - name pattern of the files: *.nn.message
-      - nn is the time in seconds the message should be displayed at least
-      - current implementation:
-         - the consumer ignores this argument
-         - files will be consumed in any order. It is not a FIFO yet!
-   - in case there is no new file, the last displayed text will remain 
-   - an empty file will reset the text on the game pad
+      jenkins.10.messages
+      tagi.10.messages
+      
+   where the very left part references the feed name (jenkins, tagi), the 
+   number the time in seconds the message should be displayed at least. 
    
+    ${windowsUser}/.logitec/outbound it the folder where we place files when 
+    one of the four pad keys is pressed. The names of the files have following 
+    pattern
+    
+      <full name of the last consumed inbound file>.bn.pressed
+      
+     For example: jenkins.10.messages.b0.pressed is the file produced when 
+     the very left button is pressed after the message from jenkins was 
+     consumed.
      
- - We have a text file producer written in Java (the code of this project) 
-   which connects to a jenkins server and pulls the state of all jobs.
-   
-   - only failing jobs will be added to the text file
-   - text file will be written with jenkins.50.message
-   - we wait for 60 seconds before we do the next check
-   
-  
+The class nca.any2logitec.impl.LogitectHub is the main class. It contains also
+the "hard coded" confoguration for the jekins and tagi adapters.
 
+In the folder cpp you find the c++ programm which talks to the game pad through
+the provided API from logitec. See also 
+http://www.logitech.com/de-ch/support/7246?crid=411&osid=14&bit=64 for more
+details on that.
 
-Outlook
--------   
- - Consumer reads files in FIFO manner and will also dispaly a message as 
-   desired in the file name. Of course there is a maximal display time
-   (configure).
- - 
- - Consumer as well as producer could be registered as Windows Services
- - Provide a Java Plugin Framework with spring less configuration to have 
-   any kind of message producer running in the same daemon.  
    
- - Write more cool message producers in different languages such as Perl, 
-   PHP, Groovy, Batch and so on ...  
