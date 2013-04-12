@@ -19,8 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CommandInvoker extends TimerTask {
 
-	private static Logger logger = LoggerFactory
-			.getLogger(CommandInvoker.class);
+	private static Logger logger = LoggerFactory.getLogger(CommandInvoker.class);
 
 	private Timer timer;
 	private final MessageConsumer messageConsumer;

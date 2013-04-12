@@ -30,7 +30,7 @@ public class LogitecHub {
 
 		try {
 			logger.info("Starting LogitecHub ...");
-			// jenkins();
+			jenkins();
 			tagi();
 			logger.info("done!");
 			
@@ -54,7 +54,7 @@ public class LogitecHub {
 	protected static void jenkins() throws MalformedURLException {		
 		logger.info("Install Jenkins Adapter ...");
 		Timer adapterTimer = new Timer();
-		adapterTimer.schedule(new AdapterTask(getJenkinsAdapter()), 1000L, 10*1000L);
+		adapterTimer.schedule(new AdapterTask(getJenkinsAdapter()), 1000L, 10*3000L);
 		logger.info("done!");
 		logger.info("Install Jenkins Command Invoker ...");
 		CommandInvoker commandInvoker = getJenkinsCommandInvoker();
@@ -63,7 +63,7 @@ public class LogitecHub {
 	}
 
 	protected static Adapter getJenkinsAdapter() throws MalformedURLException {
-		URL url = new URL("http://localhost:8080/jenkins/api/xml");
+		URL url = new URL("http://localhost:8080/jenkins/api/xml?depth=1");
 		JenkinsAdapter adapter = new JenkinsAdapter(url, JobStatusColor.RED, getMessageProducer());
 		return adapter;
 	}

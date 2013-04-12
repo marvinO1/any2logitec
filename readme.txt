@@ -12,11 +12,14 @@ simple protocol and implemented a file based version.
    which then get displayed by the pad. Each message producer uses its unique 
    feed name to produce files:
    
-      jenkins.10.messages
-      tagi.10.messages
+      jenkins.10.0.messages
+      tagi.10.0.messages
       
-   where the very left part references the feed name (jenkins, tagi), the 
-   number the time in seconds the message should be displayed at least. 
+   where the very left part references the feed name (such as jenkins, tagi), 
+   the first number the time in seconds the message should be displayed at 
+   least and the second number the correlationId of the message. The postfix
+   message is only used to identify the file as message file.
+   
    
     ${windowsUser}/.logitec/outbound it the folder where we place files when 
     one of the four pad keys is pressed. The names of the files have following 
@@ -24,7 +27,7 @@ simple protocol and implemented a file based version.
     
       <full name of the last consumed inbound file>.bn.pressed
       
-     For example: jenkins.10.messages.b0.pressed is the file produced when 
+     For example: jenkins.10.0.messages.b0.pressed is the file produced when 
      the very left button is pressed after the message from jenkins was 
      consumed.
      
