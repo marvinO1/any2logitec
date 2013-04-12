@@ -7,9 +7,11 @@ import java.nio.file.Paths;
  * Implements methods to get environment settings.
  */
 public class Any2LogitecEnvironment {
-	
+
 	/**
-	 * Answers the path where you can place inbound files which will be consumed by the pad.
+	 * Answers the path where you can place inbound files which will be consumed
+	 * by the pad.
+	 * 
 	 * @return Path never null!
 	 */
 	public static Path getLogitecHubInboundFolder() {
@@ -19,7 +21,7 @@ public class Any2LogitecEnvironment {
 		}
 		return Paths.get(pathStr).resolve("inbound");
 	}
-	
+
 	/**
 	 * Answers the path where you can read outbound files.
 	 * 

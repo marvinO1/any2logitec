@@ -18,26 +18,27 @@ import org.slf4j.LoggerFactory;
  */
 public class CommandInvoker extends TimerTask {
 
-	private static Logger logger = LoggerFactory.getLogger(CommandInvoker.class);
-	
+	private static Logger logger = LoggerFactory
+			.getLogger(CommandInvoker.class);
+
 	private Timer timer;
 	private final MessageConsumer messageConsumer;
-	private final Map<CommandKey, Command> commands = new HashMap<CommandKey, Command>();	
-	
+	private final Map<CommandKey, Command> commands = new HashMap<CommandKey, Command>();
+
 	public CommandInvoker(MessageConsumer messageConsumer) {
 		this.messageConsumer = messageConsumer;
-	} 	
-	
+	}
+
 	/**
 	 * Starts the command invoker.
 	 */
 	public void start() {
-		if (timer == null) { 
+		if (timer == null) {
 			timer = new Timer();
 			timer.schedule(this, 1000, 1000);
 		}
 	}
-	
+
 	/**
 	 * Stops the command invoker.
 	 */
@@ -47,7 +48,7 @@ public class CommandInvoker extends TimerTask {
 			timer = null;
 		}
 	}
-	
+
 	@Override
 	public void run() {
 		List<CommandKey> commandKeys = this.messageConsumer.consume();
@@ -55,23 +56,22 @@ public class CommandInvoker extends TimerTask {
 			invoke(key);
 		}
 	}
-	
+
 	public void register(CommandKey key, Command command) {
 		commands.remove(key);
-	    commands.put(key, command);
+		commands.put(key, command);
 	}
-	
+
 	public void deregister(CommandKey key) {
 		commands.remove(key);
 	}
-	
-	protected void invoke(CommandKey key) {		
+
+	protected void invoke(CommandKey key) {
 		if (commands.containsKey(key)) {
-		  commands.get(key).execute();
+			commands.get(key).execute();
 		} else {
-		  logger.warn("No command registered for key: {}", key);
+			logger.warn("No command registered for key: {}", key);
 		}
 	}
-	
 
 }

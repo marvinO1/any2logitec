@@ -19,58 +19,60 @@ import nca.any2logitec.api.MessageConsumer;
 
 public class FileBasedMessageConsumer implements MessageConsumer {
 
-	private static Logger logger = LoggerFactory.getLogger(FileBasedMessageConsumer.class); 
-	
+	private static Logger logger = LoggerFactory
+			.getLogger(FileBasedMessageConsumer.class);
+
 	private final Path outboundPath;
 	private final String feedName;
 	private final Date startTime;
-	
+
 	public FileBasedMessageConsumer(Path outboundPath, String feedName) {
 		this.outboundPath = outboundPath;
 		this.feedName = feedName;
 		this.startTime = new Date();
 	}
-	
+
 	@Override
 	public List<CommandKey> consume() {
 		List<CommandKey> messages = new ArrayList<CommandKey>();
-		
+
 		String feedPatter = getFeedPattern();
-		try (DirectoryStream<Path> commands = Files.newDirectoryStream(this.outboundPath, feedPatter)) {
-		 for (Path p : commands) {
-		   CommandKey key = CommandKey.fromFileRepresentation(p, this.feedName);
-		   
-		   if (!isCommandExpired(p)) {
-			   messages.add(key);
-		   }
-		   removeCommandFile(p);
-		 }
+		try (DirectoryStream<Path> commands = Files.newDirectoryStream(
+				this.outboundPath, feedPatter)) {
+			for (Path p : commands) {
+				CommandKey key = CommandKey.fromFileRepresentation(p, this.feedName);
+
+				if (!isCommandExpired(p)) {
+					messages.add(key);
+				}
+				removeCommandFile(p);
+			}
 		} catch (IOException ex) {
-		  logger.error("Failed to read commad file from: " + this.outboundPath, ex);
+			logger.error("Failed to read commad file from: " + this.outboundPath, ex);
 		}
 		return messages;
 	}
 
-	
 	/**
-	 * Answers true in case the found command was created before the {@link CommandInvoker} was
-	 * started and therefore is expired!
-	 * @throws IOException 
+	 * Answers true in case the found command was created before the
+	 * {@link CommandInvoker} was started and therefore is expired!
+	 * 
+	 * @throws IOException
 	 */
 	protected boolean isCommandExpired(Path p) throws IOException {
 		boolean ret = false;
 		try {
-		  FileTime fileTime = Files.getLastModifiedTime(p, LinkOption.NOFOLLOW_LINKS);
-		  long ts = fileTime.to(TimeUnit.MILLISECONDS);
-		  if (ts < startTime.getTime()) {
-			ret = false; 
-		  }
+			FileTime fileTime = Files.getLastModifiedTime(p, LinkOption.NOFOLLOW_LINKS);
+			long ts = fileTime.to(TimeUnit.MILLISECONDS);
+			if (ts < startTime.getTime()) {
+				ret = false;
+			}
 		} catch (IOException ex) {
 			logger.error("Could not read lastmodifiedTime on given path: " + p.toAbsolutePath(), ex);
 		}
 		return ret;
 	}
-	
+
 	protected String getFeedPattern() {
 		StringBuilder sb = new StringBuilder();
 		if (this.feedName != null) {
@@ -78,13 +80,13 @@ public class FileBasedMessageConsumer implements MessageConsumer {
 		}
 		sb.append("*.pressed");
 		return sb.toString();
-	} 
-	
+	}
+
 	protected void removeCommandFile(Path p) {
 		try {
 			Files.deleteIfExists(p);
 		} catch (IOException ex) {
-			logger.error("Failed to remove command file: " + p.toAbsolutePath(), ex);			
+			logger.error("Failed to remove command file: " + p.toAbsolutePath(), ex);
 		}
 	}
 }
