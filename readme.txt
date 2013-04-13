@@ -17,23 +17,24 @@ simple protocol and implemented a file based version.
       
    The very left part references the feed name (such as jenkins, tagi), the 
    first number the time in seconds the message should be displayed at least 
-   and the second number the correlationId of the message. The postfix
-   message is only used to identify the file as message file.
+   and the second number is the correlationId of the message. The postfix
+   message is only used to identify the file as a message file.
    
    
-    ${windowsUser}/.logitec/outbound it the folder where we place files when 
-    one of the four pad buttons is pressed. The names of the files have 
-    following pattern
+    ${windowsUser}/.logitec/outbound it the folder where the pad places files 
+    when one of the four pad buttons have been pressed. The names of the files
+    have following pattern
     
       <full name of the last consumed inbound file>.bn.pressed
       
      For example: jenkins.10.0.messages.b0.pressed is the file produced when 
-     the very left button is pressed after the message from jenkins was 
+     the very left button is pressed, after the message from jenkins was 
      consumed.
      
-The class nca.any2logitec.impl.LogitectHub is the main class. It contains also
-the "hard coded" configuration for the jekins and tagi adapters. Currently we
-do not have a installation script for for the java part. 
+The class nca.any2logitec.impl.LogitectHub is the main class representing the 
+java based hub. It contains also the "hard coded" configuration for the jekins
+and tagi adapters. Currently we do not have a installation script for for the 
+java part. 
 
 In the folder cpp you find the c++ programm which talks to the game pad through
 the provided API from logitec. See also 
