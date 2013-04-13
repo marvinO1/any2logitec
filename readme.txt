@@ -32,14 +32,16 @@ simple protocol and implemented a file based version.
      consumed.
      
 The class nca.any2logitec.impl.LogitectHub is the main class. It contains also
-the "hard coded" configuration for the jekins and tagi adapters.
+the "hard coded" configuration for the jekins and tagi adapters. Currently we
+do not have a installation script for for the java part. 
 
 In the folder cpp you find the c++ programm which talks to the game pad through
 the provided API from logitec. See also 
 http://www.logitech.com/de-ch/support/7246?crid=411&osid=14&bit=64 for more
 details on that.
 
-
 The logitecHub.7z contains the C++ executable. After you have installed the
-software for the Logitec G510 unzip the file and run the exe.
+software for the Logitec G510 unzip the file at any location and run the exe.
+
+
    
