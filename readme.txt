@@ -39,4 +39,7 @@ the provided API from logitec. See also
 http://www.logitech.com/de-ch/support/7246?crid=411&osid=14&bit=64 for more
 details on that.
 
+
+The logitecHub.7z contains the C++ executable. After you have installed the
+software for the Logitec G510 unzip the file and run the exe.
    
