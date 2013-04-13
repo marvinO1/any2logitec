@@ -2,6 +2,9 @@ package nca.any2logitec.api;
 
 import java.nio.file.Path;
 
+/**
+ * Represents the buttons of the game pad.
+ */
 public enum CommandKey {
 
 	BUTTON_0("b0.pressed"), 

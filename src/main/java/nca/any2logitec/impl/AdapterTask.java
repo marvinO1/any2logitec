@@ -4,6 +4,9 @@ import java.util.TimerTask;
 
 import nca.any2logitec.api.Adapter;
 
+/**
+ * Wrapper to run any component implementing {@link Adapter} as a {@TimerTask}.
+ */
 class AdapterTask extends TimerTask {
 
 	private Adapter adapter;

@@ -1,5 +1,12 @@
 package nca.any2logitec.api;
 
+/**
+ * Represents a registered command. The {@link CommdanKey} is linked to the buttons
+ * of the game pad. The {@code correlationId} is used to identify the command request
+ * as well as to look up any information used to execute the command.
+ * 
+ * @see Command
+ */
 public class CommandInfo {
 
 	private final CommandKey key;

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nca.any2logitec.api.Adapter;
+import nca.any2logitec.api.DisplayMessage;
 import nca.any2logitec.api.MessageProducer;
 import nca.tagi.newsticker.Feed;
 import nca.tagi.newsticker.FeedItem;
@@ -24,18 +25,11 @@ public class TagiAdapter implements Adapter {
 	private long correlationId = 0;
 	
 	
-	private static FeedItem feedItem;
-	
-	
 	public TagiAdapter(FeedReader feedReader, MessageProducer messageProducer) {
 		this.feedReader = feedReader;
 		this.messageProducer = messageProducer;
 	}
 
-	public static FeedItem getFeedItem() {
-		return feedItem;
-	}
-	
 	@Override
 	public void produceInfo() {
 
@@ -44,8 +38,10 @@ public class TagiAdapter implements Adapter {
 		  FeedItem item = getFeedManager().processFeed(feed);
 		  if (item != null) {
 			logger.info("Adding new feed: {}", item);
-			this.messageProducer.produce(item.description(), "tagi", 11, correlationId++);
-			this.feedItem = item;
+			DisplayMessage msg = new DisplayMessage("tagi", 99, correlationId++);
+			msg.setLines(item.description());			
+			this.messageProducer.produce(msg);
+			TagiCommand.setFeedItem(item);
 		  }
 		} catch (Exception ex) {
 			logger.error("Failed to read tagi feed", ex);

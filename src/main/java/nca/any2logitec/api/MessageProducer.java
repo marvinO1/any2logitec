@@ -1,7 +1,13 @@
 package nca.any2logitec.api;
 
-import java.util.List;
 
+/**
+ * Produces messages that get sent to the game pad.
+ */
 public interface MessageProducer {
-	void produce(List<String> messages, String feedName, int desiredDisplayTimeInSeconds, long correlationId) throws Exception;
+	
+	/**
+	 * Sends the given messages to the game pad.
+	 */
+	void produce(DisplayMessage message) throws Exception;
 }

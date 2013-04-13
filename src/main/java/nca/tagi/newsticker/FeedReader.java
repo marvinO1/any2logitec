@@ -12,8 +12,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.XMLEvent;
 
-import nca.jenkins2logitec.JenkinsCommand;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

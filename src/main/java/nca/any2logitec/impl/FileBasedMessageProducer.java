@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
+import nca.any2logitec.api.DisplayMessage;
 import nca.any2logitec.api.MessageProducer;
 
 /**
@@ -19,16 +19,17 @@ public class FileBasedMessageProducer implements MessageProducer {
 		this.inboundPath = inboundPath;
 	}
 
-	@Override
-	public void produce(List<String> messages, String feedName,
-			int desiredDisplayTimeInSeconds, long correlationId) throws IOException {
 
+	@Override
+	public void produce(DisplayMessage message) throws IOException {
+		
 		StringBuilder sb = new StringBuilder();
-		sb.append(feedName).append(".")
-		   .append(desiredDisplayTimeInSeconds)
+		sb.append(message.getFeedName()).append(".")
+		   .append(message.getDesiredDisplayTimeInSeconds())
 		   .append(".")
-		   .append(correlationId)
+		   .append(message.getCorrelationId())
 		   .append(".message");
-		Files.write(this.inboundPath.resolve(sb.toString()), messages, StandardCharsets.UTF_8);
+		
+		Files.write(this.inboundPath.resolve(sb.toString()), message.getLines(), StandardCharsets.ISO_8859_1);
 	}
 }

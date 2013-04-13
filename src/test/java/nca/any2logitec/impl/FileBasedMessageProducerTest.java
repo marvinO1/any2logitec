@@ -1,14 +1,11 @@
 package nca.any2logitec.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import nca.any2logitec.api.DisplayMessage;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +28,10 @@ public class FileBasedMessageProducerTest {
 		List<String> messages = new ArrayList<String>();
 		messages.add("Hello World");
 		
-		this.producer.produce(messages, "hossa", 10, 11L);
+		DisplayMessage msg = new DisplayMessage("hossa", 10, 11L);
+		msg.addLine("Hello World");
+		
+		this.producer.produce(msg);
 
 		// I am to lazzy to write the assert, code works ...
 	}

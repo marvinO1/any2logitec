@@ -1,11 +1,11 @@
 package nca.jenkins2logitec;
 
 import java.net.URL;
-import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.List;
 
 import nca.any2logitec.api.Adapter;
+import nca.any2logitec.api.DisplayMessage;
 import nca.any2logitec.api.MessageProducer;
 
 import org.dom4j.Document;
@@ -17,15 +17,16 @@ import org.slf4j.LoggerFactory;
 
 public class JenkinsAdapter implements Adapter  {
 
+	
 	private static Logger logger = LoggerFactory.getLogger(JenkinsAdapter.class);
-	private JobStatusColor colorToTrigger;
+	private static final String FEED_NAME = "jenkins";
 	private URL url;
+	private JobStatusColor colorToTrigger;	
 	private MessageProducer messageProducer;
+	private long correlationId = 0;
     private long numberOfReportedProjects = 0;
-    
-    
-	public JenkinsAdapter(URL jenkinsRestUrl, JobStatusColor colorToTrigger,
-			MessageProducer messageProducer) {
+        
+	public JenkinsAdapter(URL jenkinsRestUrl, JobStatusColor colorToTrigger, MessageProducer messageProducer) {
 		this.url = jenkinsRestUrl;
 		this.colorToTrigger = colorToTrigger;
 		this.messageProducer = messageProducer;
@@ -36,20 +37,19 @@ public class JenkinsAdapter implements Adapter  {
 		try {
 		  List<Project> projectsInTroubleList = getProjectsInTrouble();
 		  
-		  if (projectsInTroubleList.size() != 0 ) {
-			  
+		  if (projectsInTroubleList.size() != 0 ) {			 
 			  for (Project p : projectsInTroubleList) {
-				  List<String> messages = new ArrayList<String>();
-				  messages.add(p.getMessage());
-				  this.messageProducer.produce(messages, "jenkins", 10, p.getId());
+				  DisplayMessage msg = getProblemMessage(p);
+				  this.messageProducer.produce(msg);
+				  JenkinsCommand.registerProjectForCorrelationId(msg.getCorrelationId(),  p);
 			  }			  
 			  this.numberOfReportedProjects = projectsInTroubleList.size();
 		  } else {
 			  if (this.numberOfReportedProjects != 0) {
 				  // clear display
-				 this.messageProducer.produce(new ArrayList<String>(), "jenkins", 10, 0);
+				 this.messageProducer.produce(getAllOkMessage());
 			  } else {
-				 this.logger.info("No news aree good news and therefore not sent to the pad ...");  
+				 logger.info("No news aree good news and therefore not sent to the pad ...");  
 			  }
 		  }
 		  
@@ -58,6 +58,22 @@ public class JenkinsAdapter implements Adapter  {
 		}		
 	}
 	
+	protected DisplayMessage getProblemMessage(Project p) {
+		DisplayMessage msg = new DisplayMessage(FEED_NAME, 99, correlationId);
+		msg.addLine(p.getMessage())
+		   .addLine("")
+		   .addLine("")
+		   .addLine("Info   NOP     NOP    NOP");
+		correlationId++;
+		return msg;
+	}
+	
+	protected DisplayMessage getAllOkMessage() {
+		DisplayMessage msg = new DisplayMessage(FEED_NAME, 99, 0); 
+		msg.addLine("All Jenkings projects are ok");
+		return msg;
+	}
+		
 	@SuppressWarnings("unchecked")
 	public List<Project> getProjectsInTrouble() throws DocumentException {
 		List<Project> l = new ArrayList<Project>();
@@ -75,7 +91,6 @@ public class JenkinsAdapter implements Adapter  {
 				long id = Long.parseLong(build.elementText("number"));
 				
 				Project p = new Project(job.elementText("name"), id, url);
-				JenkinsCommand.registerProjectForCorrelationId(id,  p);
 				
 				StringBuilder sb = new StringBuilder();
 				sb.append("Job: ");
@@ -88,4 +103,7 @@ public class JenkinsAdapter implements Adapter  {
 		}
 		return l;
 	}
+	
+
+
 }
