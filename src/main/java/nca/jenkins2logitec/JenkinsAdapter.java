@@ -70,7 +70,7 @@ public class JenkinsAdapter implements Adapter  {
 	
 	protected DisplayMessage getAllOkMessage() {
 		DisplayMessage msg = new DisplayMessage(FEED_NAME, 99, 0); 
-		msg.addLine("All Jenkings projects are ok");
+		msg.addLine("Jenkins projects are ok");
 		return msg;
 	}
 		
