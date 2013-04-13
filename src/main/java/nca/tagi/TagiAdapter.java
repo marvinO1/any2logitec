@@ -32,19 +32,23 @@ public class TagiAdapter implements Adapter {
 
 	@Override
 	public void produceInfo() {
-
+		FeedItem item = null;
 		try {
 		  Feed feed = this.feedReader.read();
-		  FeedItem item = getFeedManager().processFeed(feed);
+		  item = getFeedManager().processFeed(feed);
 		  if (item != null) {
 			logger.info("Adding new feed: {}", item);
 			DisplayMessage msg = new DisplayMessage("tagi", 99, correlationId++);
 			msg.setLines(item.description());			
 			this.messageProducer.produce(msg);
-			TagiCommand.setFeedItem(item);
+			
 		  }
 		} catch (Exception ex) {
 			logger.error("Failed to read tagi feed", ex);
+		} finally {
+			if (item != null) {
+			  TagiCommand.setFeedItem(item);
+			}
 		}
 	}
 	

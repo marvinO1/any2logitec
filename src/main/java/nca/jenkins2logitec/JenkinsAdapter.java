@@ -49,7 +49,7 @@ public class JenkinsAdapter implements Adapter  {
 				  // clear display
 				 this.messageProducer.produce(getAllOkMessage());
 			  } else {
-				 logger.info("No news aree good news and therefore not sent to the pad ...");  
+				 logger.info("No news are good news and therefore not sent to the pad ...");  
 			  }
 		  }
 		  
