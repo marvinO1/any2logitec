@@ -45,9 +45,11 @@ public class JenkinsAdapter implements Adapter  {
 			  }			  
 			  this.numberOfReportedProjects = projectsInTroubleList.size();
 		  } else {
+			  
 			  if (this.numberOfReportedProjects != 0) {
 				  // clear display
 				 this.messageProducer.produce(getAllOkMessage());
+				 this.numberOfReportedProjects = 0;
 			  } else {
 				 logger.info("No news are good news and therefore not sent to the pad ...");  
 			  }
