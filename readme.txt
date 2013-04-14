@@ -1,16 +1,16 @@
 The "Jekins to Gamepad" project for NCA Code Camp 2013. Actually we want to 
 display any 4 line information on the pad. Jekins would only be one source. 
 
-The whole thing should be language independent. So any device that can produce 
-a 4 line file can act as a message producer.
+The whole solution should be language independent. So any device that can 
+produce a 4 line file can act as a message producer.
 
 We implemented a little messaging application which can send information to 
 the display as receiving messages from the buttons. Doing this we defined a 
 simple protocol and implemented a file based version.
 
-   ${windowsUser}/.logitec/inbound is the folder where we can place messages 
-   which then get displayed by the pad. Each message producer uses its unique 
-   feed name to produce files, for instance
+   %LOGITEC_DISPLAY_FOLDER_ROOT%/inbound is the folder where we can 
+   place messages which then get displayed by the pad. Each message producer 
+   uses its unique feed name to produce files, for instance
    
       jenkins.10.0.messages
       tagi.10.0.messages
@@ -19,20 +19,19 @@ simple protocol and implemented a file based version.
    first number the time in seconds the message should be displayed at least 
    and the second number is the correlationId of the message. The postfix
    message is only used to identify the file as a message file.
-   
-   
-    ${windowsUser}/.logitec/outbound it the folder where the pad places files 
-    when one of the four pad buttons have been pressed. The names of the files
-    have following pattern
+      
+    %LOGITEC_DISPLAY_FOLDER_ROOT%/outbound it the folder where the 
+    pad places files when one of the four pad buttons have been pressed. 
+    The names of the files have following pattern
     
       <full name of the last consumed inbound file>.bn.pressed
       
-     For example: jenkins.10.0.messages.b0.pressed is the file produced when 
-     the very left button is pressed, after the message from jenkins was 
+     For example: jenkins.10.0.messages.b0.pressed is the file produced 
+     when the very left button is pressed, after the message from jenkins was 
      consumed.
      
-    ${windowsUser}/.logitec/cfg contains for each adapter the property file
-    used for configuration. 
+    %LOGITEC_DISPLAY_FOLDER_ROOT%/cfg contains for each adapter 
+    the property file used for configuration. 
      
       jenkins.prop 
         jenkins.api.url=http://localhost:8080/jenkins/api/xml?depth=1
