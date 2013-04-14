@@ -9,6 +9,20 @@ import java.nio.file.Paths;
 public class Any2LogitecEnvironment {
 
 	/**
+	 * Answers the path where you can place property files for configuration.
+	 * 
+	 * @return Path never null!
+	 */
+	public static Path getLogitecHubCfgFolder() {
+		String pathStr = System.getenv("LOGITEC_DISPLAY_FOLDER_ROOT");
+		if (pathStr == null) {
+			pathStr = "C:/temp/logitec";
+		}
+		return Paths.get(pathStr).resolve("cfg");
+	}
+	
+	
+	/**
 	 * Answers the path where you can place inbound files which will be consumed
 	 * by the pad.
 	 * 

@@ -31,10 +31,23 @@ simple protocol and implemented a file based version.
      the very left button is pressed, after the message from jenkins was 
      consumed.
      
+    ${windowsUser}/.logitec/cfg contains for each adapter the property file
+    used for configuration. 
+     
+      jenkins.prop 
+        jenkins.api.url=http://localhost:8080/jenkins/api/xml?depth=1
+        
+      tagi.prop
+        tagi.rss_ticker.url=http://www.tagesanzeiger.ch/rss_ticker.html
+        
+    We use separated files to avoid any name clashes and also to follow
+    the plug in concept.     
+     
+     
 The class nca.any2logitec.impl.LogitectHub is the main class representing the 
-java based hub. It contains also the "hard coded" configuration for the jekins
-and tagi adapters. Currently we do not have a installation script for for the 
-java part. 
+java based hub. It contains also the configuration for the jekins and tagi 
+adapters. Currently we do not have a installation script for for the java 
+part. 
 
 In the folder cpp you find the c++ programm which talks to the game pad through
 the provided API from logitec. See also 
@@ -43,6 +56,8 @@ details on that.
 
 The logitecHub.7z contains the C++ executable. After you have installed the
 software for the Logitec G510 unzip the file at any location and run the exe.
+
+See also the Präsentation1.pptx for more details.
 
 
    

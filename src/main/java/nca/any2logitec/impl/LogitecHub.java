@@ -1,7 +1,8 @@
 package nca.any2logitec.impl;
 
-import java.net.MalformedURLException;
+import java.io.FileReader;
 import java.net.URL;
+import java.util.Properties;
 import java.util.Timer;
 
 import nca.any2logitec.api.Adapter;
@@ -51,7 +52,7 @@ public class LogitecHub {
 
 	// -- JENKINS --------------------------------------------------------------------------------
 
-	protected static void jenkins() throws MalformedURLException {		
+	protected static void jenkins() throws Exception {		
 		logger.info("Install Jenkins Adapter ...");
 		Timer adapterTimer = new Timer();
 		adapterTimer.schedule(new AdapterTask(getJenkinsAdapter()), 1000L, 10*3000L);
@@ -62,8 +63,11 @@ public class LogitecHub {
 		logger.info("done!");
 	}
 
-	protected static Adapter getJenkinsAdapter() throws MalformedURLException {
-		URL url = new URL("http://localhost:8080/jenkins/api/xml?depth=1");
+	protected static Adapter getJenkinsAdapter() throws Exception {
+		Properties prop = new Properties();
+		prop.load(new FileReader(Any2LogitecEnvironment.getLogitecHubCfgFolder().resolve("jenkins.prop").toFile()));
+		String urlStr = prop.getProperty("jenkins.api.url", "http://localhost:8080/jenkins/api/xml?depth=1");
+		URL url = new URL(urlStr);
 		JenkinsAdapter adapter = new JenkinsAdapter(url, JobStatusColor.RED, getMessageProducer());
 		return adapter;
 	}
@@ -80,8 +84,8 @@ public class LogitecHub {
 	
 
 	// -- Tagi -----------------------------------------------------------------------------------
-	protected static void tagi() throws MalformedURLException {		
-		logger.info("Install Tagi Adapter ...");
+	protected static void tagi() throws Exception {		
+		logger.info("Install Tagi Adapter ...");				
 		Timer adapterTimer = new Timer();
 		adapterTimer.schedule(new AdapterTask(getTagiAdapter()), 2000L, 20*1000L);
 		logger.info("done!");
@@ -91,13 +95,17 @@ public class LogitecHub {
 		logger.info("done!");
 	}
 	
-	protected static Adapter getTagiAdapter() throws MalformedURLException {
+	protected static Adapter getTagiAdapter() throws Exception {
 		return new TagiAdapter(getTagiFeedReader(), getMessageProducer());
 	}
 	
 	
-	protected static FeedReader getTagiFeedReader() throws MalformedURLException {
-		URL url = new URL("http://www.tagesanzeiger.ch/rss_ticker.html");
+	protected static FeedReader getTagiFeedReader() throws Exception {
+		
+		Properties prop = new Properties();
+		prop.load(new FileReader(Any2LogitecEnvironment.getLogitecHubCfgFolder().resolve("tagi.prop").toFile()));
+		String urlStr = prop.getProperty("tagi.rss_ticker.url", "http://www.tagesanzeiger.ch/rss_ticker.html");
+		URL url = new URL(urlStr);
 		return new FeedReader(url);
 	}
 	
@@ -109,6 +117,7 @@ public class LogitecHub {
 		commandInvoker.register(CommandKey.BUTTON_3, new TagiCommand());		
 		return commandInvoker;
 	}
+	
 	// -- Common -----------------------------------------------------------------------------------
 	protected static MessageProducer getMessageProducer() {
 		return new FileBasedMessageProducer(Any2LogitecEnvironment.getLogitecHubInboundFolder());
