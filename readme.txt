@@ -1,5 +1,6 @@
-The "Jekins to Gamepad" project for NCA Code Camp 2013. Actually we want to 
-display any 4 line information on the pad. Jekins would only be one source. 
+The "Jenkins to Gamepad" project for NCA Code Camp 2013. Actually we want to 
+display information (4 lines of each 80 characters) on the pad. Jenkins would 
+only be one source. 
 
 The whole solution should be language independent. So any device that can 
 produce a 4 line file can act as a message producer.
@@ -44,7 +45,7 @@ simple protocol and implemented a file based version.
      
      
 The class nca.any2logitec.impl.LogitectHub is the main class representing the 
-java based hub. It contains also the configuration for the jekins and tagi 
+java based hub. It contains also the configuration for the Jenkins and tagi 
 adapters. Currently we do not have a installation script for for the java 
 part. 
 
