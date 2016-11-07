@@ -1,17 +1,20 @@
-The "Jenkins to Gamepad" project for NCA Code Camp 2013. Actually we want to 
-display information (4 lines of each 80 characters) on the pad. Jenkins would 
-only be one source. 
+The "Jenkins to Gamepad" project for NCA Code Camp 2013. 
 
-The whole solution should be language independent. So any device that can 
+We want to display information (4 lines of each 80 characters) on the pad
+from any kind of source. Jenkins would only be one source. 
+
+The solution should be language independent. So any "thing" able to 
 produce a 4 line file can act as a message producer.
 
-We implemented a little messaging application which can send information to 
-the display as receiving messages from the buttons. Doing this we defined a 
-simple protocol and implemented a file based version.
+To do so, we implemented a little messaging application which can send 
+information to the display of the keyboard, as well as receiving messages 
+from the buttons of the keyboard. 
+
+We defined a simple protocol and implemented a file based version.
 
    %LOGITEC_DISPLAY_FOLDER_ROOT%/inbound is the folder where we can 
-   place messages which then get displayed by the pad. Each message producer 
-   uses its unique feed name to produce files, for instance
+   place messages which then get displayed by on the pad. Each message 
+   producer uses its unique feed name to produce files, for instance
    
       jenkins.10.0.messages
       tagi.10.0.messages
@@ -21,15 +24,15 @@ simple protocol and implemented a file based version.
    and the second number is the correlationId of the message. The postfix
    message is only used to identify the file as a message file.
       
-    %LOGITEC_DISPLAY_FOLDER_ROOT%/outbound it the folder where the 
-    pad places files when one of the four pad buttons have been pressed. 
-    The names of the files have following pattern
+    %LOGITEC_DISPLAY_FOLDER_ROOT%/outbound is the folder where the pad places 
+    files when one of the four pad buttons have been pressed. The names of the 
+    files have following pattern
     
       <full name of the last consumed inbound file>.bn.pressed
       
-     For example: jenkins.10.0.messages.b0.pressed is the file produced 
-     when the very left button is pressed, after the message from jenkins was 
-     consumed.
+      For example: jenkins.10.0.messages.b0.pressed is the file produced 
+      when the very left button is pressed, after the message from jenkins
+      was consumed.
      
     %LOGITEC_DISPLAY_FOLDER_ROOT%/cfg contains for each adapter 
     the property file used for configuration. 
